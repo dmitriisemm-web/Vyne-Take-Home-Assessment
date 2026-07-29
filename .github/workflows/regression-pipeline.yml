@@ -1,0 +1,61 @@
+name: 'Regression Pipeline'
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: 'App to test'
+        required: true
+        type: choice
+        options:
+          - saucedemo
+          - jsonplaceholder
+      suite:
+        description: 'Suite to run'
+        required: true
+        type: choice
+        default: regression
+        options:
+          - smoke
+          - regression
+          - all
+
+jobs:
+  run-tests:
+    name: Run ${{ inputs.app }} - ${{ inputs.suite }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: corepack enable && yarn install --immutable
+
+      - name: Install Playwright browsers
+        if: inputs.app == 'saucedemo'
+        run: yarn playwright install --with-deps chromium firefox webkit
+
+      - name: Determine test script
+        id: script
+        run: |
+          if [ "${{ inputs.suite }}" = "all" ]; then
+            echo "name=test:${{ inputs.app }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=test:${{ inputs.app }}:${{ inputs.suite }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run tests
+        run: yarn ${{ steps.script.outputs.name }}
+
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ inputs.app }}-${{ inputs.suite }}
+          path: playwright-report/
+          retention-days: 14
