@@ -1,34 +1,14 @@
-import type { Locator, Page } from '@playwright/test';
+import type { Locator } from '@playwright/test';
+import { Base } from '../../../common/base';
 import { slugify } from '../utils';
 
-export class CartSelectors {
-  constructor(protected readonly page: Page) {}
+export class CartSelectors extends Base {
+  readonly items: Locator = this.page.getByTestId('inventory-item');
+  readonly continueShoppingButton: Locator = this.page.getByTestId('continue-shopping');
+  readonly checkoutButton: Locator = this.page.getByTestId('checkout');
 
-  get items(): Locator {
-    return this.page.getByTestId('inventory-item');
-  }
-
-  get continueShoppingButton(): Locator {
-    return this.page.getByTestId('continue-shopping');
-  }
-
-  get checkoutButton(): Locator {
-    return this.page.getByTestId('checkout');
-  }
-
-  cartItem(name: string): Locator {
-    return this.items.filter({ hasText: name });
-  }
-
-  itemQuantity(name: string): Locator {
-    return this.cartItem(name).getByTestId('item-quantity');
-  }
-
-  itemPrice(name: string): Locator {
-    return this.cartItem(name).getByTestId('inventory-item-price');
-  }
-
-  removeButton(name: string): Locator {
-    return this.page.getByTestId(`remove-${slugify(name)}`);
-  }
+  readonly cartItem = (name: string): Locator => this.items.filter({ hasText: name });
+  readonly itemQuantity = (name: string): Locator => this.cartItem(name).getByTestId('item-quantity');
+  readonly itemPrice = (name: string): Locator => this.cartItem(name).getByTestId('inventory-item-price');
+  readonly removeButton = (name: string): Locator => this.page.getByTestId(`remove-${slugify(name)}`);
 }

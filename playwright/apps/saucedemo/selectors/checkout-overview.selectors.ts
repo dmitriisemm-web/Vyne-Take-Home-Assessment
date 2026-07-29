@@ -1,41 +1,15 @@
-import type { Locator, Page } from '@playwright/test';
+import type { Locator } from '@playwright/test';
+import { Base } from '../../../common/base';
 
-export class CheckoutOverviewSelectors {
-  constructor(protected readonly page: Page) {}
+export class CheckoutOverviewSelectors extends Base {
+  readonly items: Locator = this.page.getByTestId('inventory-item');
+  readonly paymentInfoValue: Locator = this.page.getByTestId('payment-info-value');
+  readonly shippingInfoValue: Locator = this.page.getByTestId('shipping-info-value');
+  readonly subtotalLabel: Locator = this.page.getByTestId('subtotal-label');
+  readonly taxLabel: Locator = this.page.getByTestId('tax-label');
+  readonly totalLabel: Locator = this.page.getByTestId('total-label');
+  readonly cancelButton: Locator = this.page.getByTestId('cancel');
+  readonly finishButton: Locator = this.page.getByTestId('finish');
 
-  get items(): Locator {
-    return this.page.getByTestId('inventory-item');
-  }
-
-  get paymentInfoValue(): Locator {
-    return this.page.getByTestId('payment-info-value');
-  }
-
-  get shippingInfoValue(): Locator {
-    return this.page.getByTestId('shipping-info-value');
-  }
-
-  get subtotalLabel(): Locator {
-    return this.page.getByTestId('subtotal-label');
-  }
-
-  get taxLabel(): Locator {
-    return this.page.getByTestId('tax-label');
-  }
-
-  get totalLabel(): Locator {
-    return this.page.getByTestId('total-label');
-  }
-
-  get cancelButton(): Locator {
-    return this.page.getByTestId('cancel');
-  }
-
-  get finishButton(): Locator {
-    return this.page.getByTestId('finish');
-  }
-
-  cartItem(name: string): Locator {
-    return this.items.filter({ hasText: name });
-  }
+  readonly cartItem = (name: string): Locator => this.items.filter({ hasText: name });
 }

@@ -1,16 +1,10 @@
-import type { Page } from '@playwright/test';
 import { CheckoutInfoSelectors } from '../selectors/checkout-info.selectors';
-import { HeaderComponent } from './header.component';
+import { HeaderComponent } from '../components/header.component';
 import { ROUTES } from '../constants';
 import type { CheckoutInfo } from '../types';
 
 export class CheckoutInfoPage extends CheckoutInfoSelectors {
-  readonly header: HeaderComponent;
-
-  constructor(page: Page) {
-    super(page);
-    this.header = new HeaderComponent(page);
-  }
+  readonly header: HeaderComponent = new HeaderComponent(this.page);
 
   async goto(): Promise<void> {
     await this.page.goto(ROUTES.CHECKOUT_STEP_ONE);

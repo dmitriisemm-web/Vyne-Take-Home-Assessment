@@ -1,25 +1,10 @@
-import type { Locator, Page } from '@playwright/test';
+import type { Locator } from '@playwright/test';
+import { Base } from '../../../common/base';
 
-export class LoginSelectors {
-  constructor(protected readonly page: Page) {}
-
-  get usernameInput(): Locator {
-    return this.page.getByTestId('username');
-  }
-
-  get passwordInput(): Locator {
-    return this.page.getByTestId('password');
-  }
-
-  get loginButton(): Locator {
-    return this.page.getByTestId('login-button');
-  }
-
-  get errorMessage(): Locator {
-    return this.page.getByTestId('error');
-  }
-
-  get errorDismissButton(): Locator {
-    return this.page.getByTestId('error-button');
-  }
+export class LoginSelectors extends Base {
+  readonly usernameInput: Locator = this.page.getByTestId('username');
+  readonly passwordInput: Locator = this.page.getByTestId('password');
+  readonly loginButton: Locator = this.page.getByTestId('login-button');
+  readonly errorMessage: Locator = this.page.getByTestId('error');
+  readonly errorDismissButton: Locator = this.page.getByTestId('error-button');
 }

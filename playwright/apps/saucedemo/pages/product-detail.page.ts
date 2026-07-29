@@ -1,15 +1,9 @@
-import type { Page } from '@playwright/test';
 import { ProductDetailSelectors } from '../selectors/product-detail.selectors';
-import { HeaderComponent } from './header.component';
+import { HeaderComponent } from '../components/header.component';
 import { parsePrice } from '../utils';
 
 export class ProductDetailPage extends ProductDetailSelectors {
-  readonly header: HeaderComponent;
-
-  constructor(page: Page) {
-    super(page);
-    this.header = new HeaderComponent(page);
-  }
+  readonly header: HeaderComponent = new HeaderComponent(this.page);
 
   async addToCart(): Promise<void> {
     await this.addToCartButton.click();

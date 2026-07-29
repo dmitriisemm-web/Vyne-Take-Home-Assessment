@@ -1,33 +1,12 @@
-import type { Locator, Page } from '@playwright/test';
+import type { Locator } from '@playwright/test';
+import { Base } from '../../../common/base';
 
-export class CheckoutInfoSelectors {
-  constructor(protected readonly page: Page) {}
-
-  get firstNameInput(): Locator {
-    return this.page.getByTestId('firstName');
-  }
-
-  get lastNameInput(): Locator {
-    return this.page.getByTestId('lastName');
-  }
-
-  get postalCodeInput(): Locator {
-    return this.page.getByTestId('postalCode');
-  }
-
-  get cancelButton(): Locator {
-    return this.page.getByTestId('cancel');
-  }
-
-  get continueButton(): Locator {
-    return this.page.getByTestId('continue');
-  }
-
-  get errorMessage(): Locator {
-    return this.page.getByTestId('error');
-  }
-
-  get errorDismissButton(): Locator {
-    return this.page.getByTestId('error-button');
-  }
+export class CheckoutInfoSelectors extends Base {
+  readonly firstNameInput: Locator = this.page.getByTestId('firstName');
+  readonly lastNameInput: Locator = this.page.getByTestId('lastName');
+  readonly postalCodeInput: Locator = this.page.getByTestId('postalCode');
+  readonly cancelButton: Locator = this.page.getByTestId('cancel');
+  readonly continueButton: Locator = this.page.getByTestId('continue');
+  readonly errorMessage: Locator = this.page.getByTestId('error');
+  readonly errorDismissButton: Locator = this.page.getByTestId('error-button');
 }

@@ -1,16 +1,10 @@
-import type { Page } from '@playwright/test';
 import { CartSelectors } from '../selectors/cart.selectors';
-import { HeaderComponent } from './header.component';
+import { HeaderComponent } from '../components/header.component';
 import { ROUTES } from '../constants';
 import { parsePrice } from '../utils';
 
 export class CartPage extends CartSelectors {
-  readonly header: HeaderComponent;
-
-  constructor(page: Page) {
-    super(page);
-    this.header = new HeaderComponent(page);
-  }
+  readonly header: HeaderComponent = new HeaderComponent(this.page);
 
   async goto(): Promise<void> {
     await this.page.goto(ROUTES.CART);
