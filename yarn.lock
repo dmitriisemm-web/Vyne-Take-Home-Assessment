@@ -316,6 +316,7 @@ __metadata:
     "@types/node": "npm:^26.1.2"
     eslint: "npm:^10.8.0"
     eslint-config-prettier: "npm:^10.1.8"
+    eslint-plugin-playwright: "npm:^2.11.0"
     prettier: "npm:^3.9.6"
     typescript: "npm:^5.6.0"
     typescript-eslint: "npm:^8.65.0"
@@ -434,6 +435,17 @@ __metadata:
   bin:
     eslint-config-prettier: bin/cli.js
   checksum: 10c0/e1bcfadc9eccd526c240056b1e59c5cd26544fe59feb85f38f4f1f116caed96aea0b3b87868e68b3099e55caaac3f2e5b9f58110f85db893e83a332751192682
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-playwright@npm:^2.11.0":
+  version: 2.11.0
+  resolution: "eslint-plugin-playwright@npm:2.11.0"
+  dependencies:
+    globals: "npm:^17.3.0"
+  peerDependencies:
+    eslint: ">=8.40.0"
+  checksum: 10c0/b93698d905fbb22893501a00eb813350a88a9bf373bcbda8f7241c0c962cfa6295155f3b66c49783eb20957f3d091d55218837cb81e083940c2ccb7f7b72c0bb
   languageName: node
   linkType: hard
 
@@ -652,6 +664,13 @@ __metadata:
   dependencies:
     is-glob: "npm:^4.0.3"
   checksum: 10c0/317034d88654730230b3f43bb7ad4f7c90257a426e872ea0bf157473ac61c99bf5d205fad8f0185f989be8d2fa6d3c7dce1645d99d545b6ea9089c39f838e7f8
+  languageName: node
+  linkType: hard
+
+"globals@npm:^17.3.0":
+  version: 17.8.0
+  resolution: "globals@npm:17.8.0"
+  checksum: 10c0/e31b36cef3befd446487674dc6ca7b8f8e62a3b76aadd975dbf80ffa732366b3ac58df8941999eb6b1406d97480103711db85d2a49c955da47ff5ec688bee9b5
   languageName: node
   linkType: hard
 
