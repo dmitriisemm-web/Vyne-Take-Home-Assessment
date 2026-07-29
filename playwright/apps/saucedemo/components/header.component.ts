@@ -2,8 +2,12 @@ import type { Locator } from '@playwright/test';
 import { Base } from '../../../common/base';
 
 export class HeaderComponent extends Base {
-  readonly menuButton: Locator = this.page.getByTestId('open-menu');
-  readonly closeMenuButton: Locator = this.page.getByTestId('close-menu');
+  // The open-menu/close-menu data-test attributes sit on the inner icon
+  // <img>, not the actual clickable <button> that wraps it, which can cause
+  // pointer-event interception. Target the button by its accessible role
+  // instead.
+  readonly menuButton: Locator = this.page.getByRole('button', { name: 'Open Menu' });
+  readonly closeMenuButton: Locator = this.page.getByRole('button', { name: 'Close Menu' });
   readonly allItemsLink: Locator = this.page.getByTestId('inventory-sidebar-link');
   readonly aboutLink: Locator = this.page.getByTestId('about-sidebar-link');
   readonly logoutLink: Locator = this.page.getByTestId('logout-sidebar-link');

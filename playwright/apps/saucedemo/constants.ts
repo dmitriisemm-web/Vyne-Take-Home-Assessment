@@ -28,3 +28,18 @@ export const SORT_OPTIONS = {
 } as const;
 
 export const SESSION_COOKIE_NAME = 'session-username';
+
+export const VALID_CHECKOUT_INFO = {
+  firstName: 'Dmitrii',
+  lastName: 'Semm',
+  postalCode: '12345'
+};
+
+export const PRODUCT_NAMES = {
+  BACKPACK: 'Sauce Labs Backpack',
+  BIKE_LIGHT: 'Sauce Labs Bike Light',
+  BOLT_T_SHIRT: 'Sauce Labs Bolt T-Shirt',
+  FLEECE_JACKET: 'Sauce Labs Fleece Jacket',
+  ONESIE: 'Sauce Labs Onesie',
+  RED_T_SHIRT: 'Test.allTheThings() T-Shirt (Red)'
+} as const;
