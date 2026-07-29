@@ -24,21 +24,19 @@ jobs:
   run-tests:
     name: Run ${{ inputs.app }} - ${{ inputs.suite }}
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.0-jammy
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 24
 
       - name: Install dependencies
         run: corepack enable && yarn install --immutable
-
-      - name: Install Playwright browsers
-        if: inputs.app == 'saucedemo'
-        run: yarn playwright install --with-deps chromium firefox webkit
 
       - name: Determine test script
         id: script
@@ -54,7 +52,7 @@ jobs:
 
       - name: Upload HTML report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: playwright-report-${{ inputs.app }}-${{ inputs.suite }}
           path: playwright-report/
