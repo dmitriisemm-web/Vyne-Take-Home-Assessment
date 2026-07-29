@@ -1,19 +1,19 @@
 import type { Page } from '@playwright/test';
 import { test as base } from '@playwright/test';
-import { LoginPage } from '../pages/login.page';
-import { InventoryPage } from '../pages/inventory.page';
-import { ProductDetailPage } from '../pages/product-detail.page';
-import { CartPage } from '../pages/cart.page';
-import { CheckoutInfoPage } from '../pages/checkout-info.page';
-import { CheckoutOverviewPage } from '../pages/checkout-overview.page';
-import { CheckoutCompletePage } from '../pages/checkout-complete.page';
+import { LoginPage } from './pages/login.page';
+import { InventoryPage } from './pages/inventory.page';
+import { ProductDetailPage } from './pages/product-detail.page';
+import { CartPage } from './pages/cart.page';
+import { CheckoutInfoPage } from './pages/checkout-info.page';
+import { CheckoutOverviewPage } from './pages/checkout-overview.page';
+import { CheckoutCompletePage } from './pages/checkout-complete.page';
 
 /**
  * Single entry point into every SauceDemo page object. Tests pull in the
- * `saucedemoApp` fixture and reach any page from it, instead of importing
- * and constructing each page object individually.
+ * `app` fixture and reach any page from it, instead of importing and
+ * constructing each page object individually.
  */
-export class SaucedemoApp {
+export class App {
   readonly loginPage: LoginPage;
   readonly inventoryPage: InventoryPage;
   readonly productDetailPage: ProductDetailPage;
@@ -33,13 +33,13 @@ export class SaucedemoApp {
   }
 }
 
-type SaucedemoFixtures = {
-  saucedemoApp: SaucedemoApp;
+type AppFixtures = {
+  app: App;
 };
 
-export const test = base.extend<SaucedemoFixtures>({
-  saucedemoApp: async ({ page }, use) => {
-    await use(new SaucedemoApp(page));
+export const test = base.extend<AppFixtures>({
+  app: async ({ page }, use) => {
+    await use(new App(page));
   }
 });
 
