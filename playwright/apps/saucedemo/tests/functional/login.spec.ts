@@ -2,7 +2,7 @@ import { test, expect } from '../../app.fixture';
 import { USERS, PASSWORD, INVALID_CREDENTIALS } from '../../constants';
 import { TAGS } from '../../../../common/constants';
 
-test.describe('Login', () => {
+test.describe('Check Login page functionalities', () => {
   test('Verify standard_user can log in and lands on the inventory page', { tag: [TAGS.FUNCTIONAL, TAGS.SMOKE] }, async ({ app }) => {
     await test.step('Log in as standard_user', async () => {
       await app.loginPage.goto();

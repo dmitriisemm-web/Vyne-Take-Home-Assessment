@@ -2,7 +2,7 @@ import { test, expect } from '../../app.fixture';
 import { USERS, PASSWORD, PRODUCT_NAMES, SORT_OPTIONS } from '../../constants';
 import { TAGS } from '../../../../common/constants';
 
-test.describe('Inventory', () => {
+test.describe('Check Inventory page functionalities', () => {
   test.beforeEach(async ({ app }) => {
     await test.step('Log in as standard_user', async () => {
       await app.loginPage.goto();

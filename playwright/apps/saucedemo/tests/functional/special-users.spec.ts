@@ -2,7 +2,7 @@ import { test, expect } from '../../app.fixture';
 import { USERS, PASSWORD, PRODUCT_NAMES } from '../../constants';
 import { TAGS } from '../../../../common/constants';
 
-test.describe('Special users', () => {
+test.describe('Check special user account behaviors', () => {
   test(
     'Check problem_user cannot add a product to the cart from the product detail page',
     { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] },

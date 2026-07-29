@@ -2,7 +2,7 @@ import { test, expect } from '../../app.fixture';
 import { USERS, PASSWORD, PRODUCT_NAMES } from '../../constants';
 import { TAGS } from '../../../../common/constants';
 
-test.describe('Cart', () => {
+test.describe('Check Cart page functionalities', () => {
   test.beforeEach(async ({ app }) => {
     await test.step('Log in as standard_user and add a product to the cart', async () => {
       await app.loginPage.goto();

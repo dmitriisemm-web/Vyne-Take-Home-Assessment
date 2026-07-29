@@ -2,7 +2,7 @@ import { test, expect } from '../../app.fixture';
 import { USERS, PASSWORD, PRODUCT_NAMES, VALID_CHECKOUT_INFO } from '../../constants';
 import { TAGS } from '../../../../common/constants';
 
-test.describe('Checkout', () => {
+test.describe('Check Checkout flow functionalities', () => {
   test.beforeEach(async ({ app }) => {
     await test.step('Log in, add a product to the cart, and go to checkout', async () => {
       await app.loginPage.goto();
@@ -96,7 +96,7 @@ test.describe('Checkout', () => {
   });
 });
 
-test.describe('Checkout with an empty cart', () => {
+test.describe('Check Checkout flow functionalities with an empty cart', () => {
   test.beforeEach(async ({ app }) => {
     await test.step('Log in and go to the cart page without adding any product', async () => {
       await app.loginPage.goto();
