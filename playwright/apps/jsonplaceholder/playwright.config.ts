@@ -1,8 +1,13 @@
-import { defineConfig } from '@playwright/test';
-import { createBaseConfig } from '../../../playwright.base.config';
+import type { PlaywrightTestConfig } from '@playwright/test';
+import path from 'node:path';
+import baseConfig from '../../../playwright.config';
 
-export default defineConfig(createBaseConfig('jsonplaceholder'), {
+const jsonplaceholderConfig: PlaywrightTestConfig = {
+  ...baseConfig,
+  testDir: path.resolve(__dirname, 'tests'),
+
   use: {
+    ...baseConfig.use,
     baseURL: 'https://jsonplaceholder.typicode.com'
   },
 
@@ -14,4 +19,6 @@ export default defineConfig(createBaseConfig('jsonplaceholder'), {
    * ever starts.
    */
   projects: [{ name: 'api' }]
-});
+};
+
+export default jsonplaceholderConfig;

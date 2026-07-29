@@ -1,8 +1,14 @@
-import { defineConfig, devices } from '@playwright/test';
-import { createBaseConfig } from '../../../playwright.base.config';
+import type { PlaywrightTestConfig } from '@playwright/test';
+import { devices } from '@playwright/test';
+import path from 'node:path';
+import baseConfig from '../../../playwright.config';
 
-export default defineConfig(createBaseConfig('saucedemo'), {
+const saucedemoConfig: PlaywrightTestConfig = {
+  ...baseConfig,
+  testDir: path.resolve(__dirname, 'tests'),
+
   use: {
+    ...baseConfig.use,
     baseURL: 'https://www.saucedemo.com',
 
     /* Matches this app's data-test attributes, so page.getByTestId() works out of the box. */
@@ -23,4 +29,6 @@ export default defineConfig(createBaseConfig('saucedemo'), {
       use: { ...devices['Desktop Safari'] }
     }
   ]
-});
+};
+
+export default saucedemoConfig;
