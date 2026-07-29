@@ -5,6 +5,7 @@ import baseConfig from '../../../playwright.config';
 
 const saucedemoConfig: PlaywrightTestConfig = {
   ...baseConfig,
+  name: 'SauceDemo config',
   testDir: path.resolve(__dirname, 'tests'),
 
   use: {

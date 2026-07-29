@@ -4,6 +4,7 @@ import baseConfig from '../../../playwright.config';
 
 const jsonplaceholderConfig: PlaywrightTestConfig = {
   ...baseConfig,
+  name: 'JSONPlaceholder config',
   testDir: path.resolve(__dirname, 'tests'),
 
   use: {
