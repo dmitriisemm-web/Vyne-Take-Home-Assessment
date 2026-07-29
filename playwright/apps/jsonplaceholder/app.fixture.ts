@@ -8,10 +8,10 @@ import { ROUTES } from './constants';
 
 /**
  * Single entry point into every JSONPlaceholder API client. Tests pull in
- * the `app` fixture and reach any resource from it, instead of importing
- * and constructing each client individually.
+ * the `jsonplaceholderApp` fixture and reach any resource from it, instead
+ * of importing and constructing each client individually.
  */
-export class App {
+export class JsonplaceholderApp {
   readonly postsClient: PostsClient;
   readonly commentsClient: ResourceClient;
   readonly albumsClient: AlbumsClient;
@@ -30,13 +30,13 @@ export class App {
   }
 }
 
-type AppFixtures = {
-  app: App;
+type JsonplaceholderAppFixtures = {
+  jsonplaceholderApp: JsonplaceholderApp;
 };
 
-export const test = base.extend<AppFixtures>({
-  app: async ({ request }, use) => {
-    await use(new App(request));
+export const test = base.extend<JsonplaceholderAppFixtures>({
+  jsonplaceholderApp: async ({ request }, use) => {
+    await use(new JsonplaceholderApp(request));
   }
 });
 

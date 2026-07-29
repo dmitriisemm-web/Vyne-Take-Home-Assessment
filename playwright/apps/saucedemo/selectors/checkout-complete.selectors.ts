@@ -1,7 +1,7 @@
 import type { Locator } from '@playwright/test';
-import { Base } from '../../../common/base';
+import { UiBase } from '../../../common/ui-base';
 
-export class CheckoutCompleteSelectors extends Base {
+export class CheckoutCompleteSelectors extends UiBase {
   readonly completeHeader: Locator = this.page.getByTestId('complete-header');
   readonly completeText: Locator = this.page.getByTestId('complete-text');
   readonly backToProductsButton: Locator = this.page.getByTestId('back-to-products');

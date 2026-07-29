@@ -1,8 +1,8 @@
 import type { Locator } from '@playwright/test';
-import { Base } from '../../../common/base';
+import { UiBase } from '../../../common/ui-base';
 import { slugify } from '../utils';
 
-export class InventorySelectors extends Base {
+export class InventorySelectors extends UiBase {
   readonly title: Locator = this.page.getByTestId('title');
   readonly sortDropdown: Locator = this.page.getByTestId('product-sort-container');
   readonly items: Locator = this.page.getByTestId('inventory-item');

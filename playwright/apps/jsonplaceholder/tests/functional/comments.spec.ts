@@ -5,9 +5,9 @@ import { TAGS } from '../../../../common/constants';
 import type { Comment } from '../../types';
 
 test.describe('Check Comments endpoint functionalities', () => {
-  test('Verify GET /comments returns all comments', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+  test('Verify GET /comments returns all comments', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ jsonplaceholderApp }) => {
     const response = await test.step('Request all comments', async () => {
-      return app.commentsClient.getAll();
+      return jsonplaceholderApp.commentsClient.getAll();
     });
 
     await test.step('Verify the response is a 200 with the full collection', async () => {
@@ -17,9 +17,9 @@ test.describe('Check Comments endpoint functionalities', () => {
     });
   });
 
-  test('Verify GET /comments?postId= returns only comments for that post', { tag: [TAGS.FUNCTIONAL, TAGS.SMOKE] }, async ({ app }) => {
+  test('Verify GET /comments?postId= returns only comments for that post', { tag: [TAGS.FUNCTIONAL, TAGS.SMOKE] }, async ({ jsonplaceholderApp }) => {
     const response = await test.step('Request comments filtered by postId', async () => {
-      return app.commentsClient.getAll({ postId: VALID_ID });
+      return jsonplaceholderApp.commentsClient.getAll({ postId: VALID_ID });
     });
 
     await test.step('Verify the count and that every comment belongs to that post', async () => {
@@ -32,10 +32,10 @@ test.describe('Check Comments endpoint functionalities', () => {
     });
   });
 
-  test('Verify GET /posts/:id/comments matches GET /comments?postId=', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+  test('Verify GET /posts/:id/comments matches GET /comments?postId=', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ jsonplaceholderApp }) => {
     const [nestedComments, filteredComments] = await test.step('Request comments via both routes', async () => {
-      const nestedResponse = await app.postsClient.getComments(VALID_ID);
-      const filteredResponse = await app.commentsClient.getAll({ postId: VALID_ID });
+      const nestedResponse = await jsonplaceholderApp.postsClient.getComments(VALID_ID);
+      const filteredResponse = await jsonplaceholderApp.commentsClient.getAll({ postId: VALID_ID });
       return Promise.all([getJson<Comment[]>(nestedResponse), getJson<Comment[]>(filteredResponse)]);
     });
 
@@ -44,15 +44,19 @@ test.describe('Check Comments endpoint functionalities', () => {
     });
   });
 
-  test('Verify GET /posts/:id/comments for a nonexistent post returns an empty array', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
-    const response = await test.step('Request comments for a nonexistent post', async () => {
-      return app.postsClient.getComments(NONEXISTENT_ID);
-    });
+  test(
+    'Verify GET /posts/:id/comments for a nonexistent post returns an empty array',
+    { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] },
+    async ({ jsonplaceholderApp }) => {
+      const response = await test.step('Request comments for a nonexistent post', async () => {
+        return jsonplaceholderApp.postsClient.getComments(NONEXISTENT_ID);
+      });
 
-    await test.step('Verify an empty array is returned with a 200, not a 404', async () => {
-      expect(response.status()).toBe(200);
-      const comments = await getJson<Comment[]>(response);
-      expect(comments).toEqual([]);
-    });
-  });
+      await test.step('Verify an empty array is returned with a 200, not a 404', async () => {
+        expect(response.status()).toBe(200);
+        const comments = await getJson<Comment[]>(response);
+        expect(comments).toEqual([]);
+      });
+    }
+  );
 });

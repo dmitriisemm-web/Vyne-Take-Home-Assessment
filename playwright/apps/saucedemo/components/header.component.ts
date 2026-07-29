@@ -1,7 +1,7 @@
 import type { Locator } from '@playwright/test';
-import { Base } from '../../../common/base';
+import { UiBase } from '../../../common/ui-base';
 
-export class HeaderComponent extends Base {
+export class HeaderComponent extends UiBase {
   readonly menuButton: Locator = this.page.getByRole('button', { name: 'Open Menu' });
   readonly closeMenuButton: Locator = this.page.getByRole('button', { name: 'Close Menu' });
   readonly allItemsLink: Locator = this.page.getByTestId('inventory-sidebar-link');

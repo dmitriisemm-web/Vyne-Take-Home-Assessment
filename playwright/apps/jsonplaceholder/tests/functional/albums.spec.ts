@@ -5,9 +5,9 @@ import { TAGS } from '../../../../common/constants';
 import type { Album, Photo } from '../../types';
 
 test.describe('Check Albums and Photos endpoint functionalities', () => {
-  test('Verify GET /albums returns all albums', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+  test('Verify GET /albums returns all albums', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ jsonplaceholderApp }) => {
     const response = await test.step('Request all albums', async () => {
-      return app.albumsClient.getAll();
+      return jsonplaceholderApp.albumsClient.getAll();
     });
 
     await test.step('Verify the response is a 200 with the full collection', async () => {
@@ -17,9 +17,9 @@ test.describe('Check Albums and Photos endpoint functionalities', () => {
     });
   });
 
-  test('Verify GET /photos returns all photos', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+  test('Verify GET /photos returns all photos', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ jsonplaceholderApp }) => {
     const response = await test.step('Request all photos', async () => {
-      return app.photosClient.getAll();
+      return jsonplaceholderApp.photosClient.getAll();
     });
 
     await test.step('Verify the response is a 200 with the full collection', async () => {
@@ -29,9 +29,9 @@ test.describe('Check Albums and Photos endpoint functionalities', () => {
     });
   });
 
-  test('Verify GET /albums/:id/photos returns the photos for that album', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+  test('Verify GET /albums/:id/photos returns the photos for that album', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ jsonplaceholderApp }) => {
     const response = await test.step('Request photos for an album', async () => {
-      return app.albumsClient.getPhotos(VALID_ID);
+      return jsonplaceholderApp.albumsClient.getPhotos(VALID_ID);
     });
 
     await test.step('Verify the count and that every photo belongs to that album', async () => {

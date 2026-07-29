@@ -1,7 +1,7 @@
 import type { Locator } from '@playwright/test';
-import { Base } from '../../../common/base';
+import { UiBase } from '../../../common/ui-base';
 
-export class LoginSelectors extends Base {
+export class LoginSelectors extends UiBase {
   readonly usernameInput: Locator = this.page.getByTestId('username');
   readonly passwordInput: Locator = this.page.getByTestId('password');
   readonly loginButton: Locator = this.page.getByTestId('login-button');

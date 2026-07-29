@@ -8,6 +8,6 @@ import type { Page } from '@playwright/test';
  * constructor - by the time a subclass's field initializers run, `super()`
  * has already returned and `this.page` is set.
  */
-export class Base {
+export class UiBase {
   constructor(protected readonly page: Page) {}
 }

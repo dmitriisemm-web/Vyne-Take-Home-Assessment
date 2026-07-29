@@ -10,10 +10,10 @@ import { CheckoutCompletePage } from './pages/checkout-complete.page';
 
 /**
  * Single entry point into every SauceDemo page object. Tests pull in the
- * `app` fixture and reach any page from it, instead of importing and
- * constructing each page object individually.
+ * `saucedemoApp` fixture and reach any page from it, instead of importing
+ * and constructing each page object individually.
  */
-export class App {
+export class SaucedemoApp {
   readonly loginPage: LoginPage;
   readonly inventoryPage: InventoryPage;
   readonly productDetailPage: ProductDetailPage;
@@ -33,13 +33,13 @@ export class App {
   }
 }
 
-type AppFixtures = {
-  app: App;
+type SaucedemoAppFixtures = {
+  saucedemoApp: SaucedemoApp;
 };
 
-export const test = base.extend<AppFixtures>({
-  app: async ({ page }, use) => {
-    await use(new App(page));
+export const test = base.extend<SaucedemoAppFixtures>({
+  saucedemoApp: async ({ page }, use) => {
+    await use(new SaucedemoApp(page));
   }
 });
 

@@ -5,9 +5,9 @@ import { TAGS } from '../../../../common/constants';
 import type { Todo, User } from '../../types';
 
 test.describe('Check Users endpoint functionalities', () => {
-  test('Verify GET /users returns all users', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+  test('Verify GET /users returns all users', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ jsonplaceholderApp }) => {
     const response = await test.step('Request all users', async () => {
-      return app.usersClient.getAll();
+      return jsonplaceholderApp.usersClient.getAll();
     });
 
     await test.step('Verify the response is a 200 with the full collection', async () => {
@@ -17,32 +17,36 @@ test.describe('Check Users endpoint functionalities', () => {
     });
   });
 
-  test('Verify GET /users/:id returns the correct nested address and company shape', { tag: [TAGS.FUNCTIONAL, TAGS.SMOKE] }, async ({ app }) => {
-    const response = await test.step('Request a single user', async () => {
-      return app.usersClient.getById(VALID_ID);
-    });
-
-    await test.step('Verify the response includes nested address.geo and company', async () => {
-      expect(response.status()).toBe(200);
-      const user = await getJson<User>(response);
-      expect(user).toMatchObject({
-        id: VALID_ID,
-        name: expect.any(String),
-        email: expect.any(String),
-        address: {
-          street: expect.any(String),
-          city: expect.any(String),
-          zipcode: expect.any(String),
-          geo: { lat: expect.any(String), lng: expect.any(String) }
-        },
-        company: { name: expect.any(String), catchPhrase: expect.any(String), bs: expect.any(String) }
+  test(
+    'Verify GET /users/:id returns the correct nested address and company shape',
+    { tag: [TAGS.FUNCTIONAL, TAGS.SMOKE] },
+    async ({ jsonplaceholderApp }) => {
+      const response = await test.step('Request a single user', async () => {
+        return jsonplaceholderApp.usersClient.getById(VALID_ID);
       });
-    });
-  });
 
-  test('Verify GET /todos returns all todos', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+      await test.step('Verify the response includes nested address.geo and company', async () => {
+        expect(response.status()).toBe(200);
+        const user = await getJson<User>(response);
+        expect(user).toMatchObject({
+          id: VALID_ID,
+          name: expect.any(String),
+          email: expect.any(String),
+          address: {
+            street: expect.any(String),
+            city: expect.any(String),
+            zipcode: expect.any(String),
+            geo: { lat: expect.any(String), lng: expect.any(String) }
+          },
+          company: { name: expect.any(String), catchPhrase: expect.any(String), bs: expect.any(String) }
+        });
+      });
+    }
+  );
+
+  test('Verify GET /todos returns all todos', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ jsonplaceholderApp }) => {
     const response = await test.step('Request all todos', async () => {
-      return app.todosClient.getAll();
+      return jsonplaceholderApp.todosClient.getAll();
     });
 
     await test.step('Verify the response is a 200 with the full collection', async () => {
@@ -52,9 +56,9 @@ test.describe('Check Users endpoint functionalities', () => {
     });
   });
 
-  test('Verify GET /users/:id/todos returns the todos for that user', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+  test('Verify GET /users/:id/todos returns the todos for that user', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ jsonplaceholderApp }) => {
     const response = await test.step('Request todos for a user', async () => {
-      return app.usersClient.getTodos(VALID_ID);
+      return jsonplaceholderApp.usersClient.getTodos(VALID_ID);
     });
 
     await test.step('Verify the count and that every todo belongs to that user', async () => {

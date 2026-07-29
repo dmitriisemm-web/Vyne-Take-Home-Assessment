@@ -1,8 +1,8 @@
 import type { Locator } from '@playwright/test';
-import { Base } from '../../../common/base';
+import { UiBase } from '../../../common/ui-base';
 import { slugify } from '../utils';
 
-export class CartSelectors extends Base {
+export class CartSelectors extends UiBase {
   readonly items: Locator = this.page.getByTestId('inventory-item');
   readonly continueShoppingButton: Locator = this.page.getByTestId('continue-shopping');
   readonly checkoutButton: Locator = this.page.getByTestId('checkout');

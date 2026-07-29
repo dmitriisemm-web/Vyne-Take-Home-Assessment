@@ -1,7 +1,7 @@
 import type { Locator } from '@playwright/test';
-import { Base } from '../../../common/base';
+import { UiBase } from '../../../common/ui-base';
 
-export class ProductDetailSelectors extends Base {
+export class ProductDetailSelectors extends UiBase {
   readonly backToProductsButton: Locator = this.page.getByTestId('back-to-products');
   readonly productName: Locator = this.page.getByTestId('inventory-item-name');
   readonly productDescription: Locator = this.page.getByTestId('inventory-item-desc');
