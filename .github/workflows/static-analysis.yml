@@ -1,0 +1,27 @@
+name: 'Pull Request Check'
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: corepack enable && yarn install --immutable
+
+      - name: Run Eslint
+        run: yarn lint
+
+      - name: Run TS Compiler
+        if: always()
+        run: yarn typecheck
