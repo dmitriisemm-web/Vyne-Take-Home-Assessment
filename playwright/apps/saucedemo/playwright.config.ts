@@ -1,11 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
-import baseConfig from '../../base.config';
+import { createBaseConfig } from '../../../playwright.base.config';
 
-export default defineConfig(baseConfig, {
-  testDir: './tests',
-  reporter: [['html', { outputFolder: '../../../playwright-report/saucedemo', open: 'never' }]],
-  outputDir: '../../../test-results/saucedemo',
-
+export default defineConfig(createBaseConfig('saucedemo'), {
   use: {
     baseURL: 'https://www.saucedemo.com',
 

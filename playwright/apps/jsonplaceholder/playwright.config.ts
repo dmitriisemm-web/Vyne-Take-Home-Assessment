@@ -1,11 +1,7 @@
 import { defineConfig } from '@playwright/test';
-import baseConfig from '../../base.config';
+import { createBaseConfig } from '../../../playwright.base.config';
 
-export default defineConfig(baseConfig, {
-  testDir: './tests',
-  reporter: [['html', { outputFolder: '../../../playwright-report/jsonplaceholder', open: 'never' }]],
-  outputDir: '../../../test-results/jsonplaceholder',
-
+export default defineConfig(createBaseConfig('jsonplaceholder'), {
   use: {
     baseURL: 'https://jsonplaceholder.typicode.com'
   },
