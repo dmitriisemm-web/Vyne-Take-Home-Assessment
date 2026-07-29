@@ -1,42 +1,54 @@
 import { test, expect } from '../../app.fixture';
-import { USERS, PASSWORD } from '../../constants';
+import { USERS, PASSWORD, INVALID_CREDENTIALS } from '../../constants';
+import { TAGS } from '../../../../common/constants';
 
 test.describe('Login', () => {
-  test('standard_user can log in and lands on the inventory page', { tag: ['@functional', '@smoke'] }, async ({ app }) => {
-    const { loginPage, inventoryPage } = app;
+  test('Verify standard_user can log in and lands on the inventory page', { tag: [TAGS.FUNCTIONAL, TAGS.SMOKE] }, async ({ app }) => {
+    await test.step('Log in as standard_user', async () => {
+      await app.loginPage.goto();
+      await app.loginPage.login(USERS.STANDARD, PASSWORD);
+    });
 
-    await loginPage.goto();
-    await loginPage.login(USERS.STANDARD, PASSWORD);
-
-    await expect(inventoryPage.title).toHaveText('Products');
-    await expect(inventoryPage.items).toHaveCount(6);
+    await test.step('Verify the inventory page is shown with all products', async () => {
+      await expect(app.inventoryPage.title).toHaveText('Products');
+      await expect(app.inventoryPage.items).toHaveCount(6);
+    });
   });
 
-  test('invalid credentials show an inline error', { tag: ['@functional', '@smoke'] }, async ({ app }) => {
-    const { loginPage } = app;
+  test('Verify invalid credentials show an inline error', { tag: [TAGS.FUNCTIONAL, TAGS.SMOKE] }, async ({ app }) => {
+    await test.step('Attempt to log in with invalid credentials', async () => {
+      await app.loginPage.goto();
+      await app.loginPage.login(INVALID_CREDENTIALS.username, INVALID_CREDENTIALS.password);
+    });
 
-    await loginPage.goto();
-    await loginPage.login('invalid_user', 'wrong_password');
-
-    await expect(loginPage.errorMessage).toContainText('Username and password do not match');
+    await test.step('Verify an invalid credentials error is shown', async () => {
+      await expect(app.loginPage.errorMessage).toContainText('Username and password do not match');
+    });
   });
 
-  test('locked_out_user is blocked with a lockout error', { tag: ['@functional', '@smoke'] }, async ({ app }) => {
-    const { loginPage } = app;
+  test('Verify locked_out_user is blocked with a lockout error', { tag: [TAGS.FUNCTIONAL, TAGS.SMOKE] }, async ({ app }) => {
+    await test.step('Attempt to log in as locked_out_user', async () => {
+      await app.loginPage.goto();
+      await app.loginPage.login(USERS.LOCKED_OUT, PASSWORD);
+    });
 
-    await loginPage.goto();
-    await loginPage.login(USERS.LOCKED_OUT, PASSWORD);
-
-    await expect(loginPage.errorMessage).toContainText('this user has been locked out');
+    await test.step('Verify a lockout error is shown', async () => {
+      await expect(app.loginPage.errorMessage).toContainText('this user has been locked out');
+    });
   });
 
-  test('logout returns to the login page', { tag: ['@functional', '@regression'] }, async ({ app }) => {
-    const { loginPage, inventoryPage } = app;
+  test('Verify logout returns to the login page', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+    await test.step('Log in as standard_user', async () => {
+      await app.loginPage.goto();
+      await app.loginPage.login(USERS.STANDARD, PASSWORD);
+    });
 
-    await loginPage.goto();
-    await loginPage.login(USERS.STANDARD, PASSWORD);
-    await inventoryPage.header.logout();
+    await test.step('Log out', async () => {
+      await app.inventoryPage.header.logout();
+    });
 
-    await expect(loginPage.loginButton).toBeVisible();
+    await test.step('Verify the login page is shown', async () => {
+      await expect(app.loginPage.loginButton).toBeVisible();
+    });
   });
 });

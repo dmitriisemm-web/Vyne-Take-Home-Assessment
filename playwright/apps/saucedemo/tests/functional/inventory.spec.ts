@@ -1,102 +1,128 @@
 import { test, expect } from '../../app.fixture';
-import { USERS, PASSWORD, PRODUCT_NAMES } from '../../constants';
+import { USERS, PASSWORD, PRODUCT_NAMES, SORT_OPTIONS } from '../../constants';
+import { TAGS } from '../../../../common/constants';
 
 test.describe('Inventory', () => {
   test.beforeEach(async ({ app }) => {
-    await app.loginPage.goto();
-    await app.loginPage.login(USERS.STANDARD, PASSWORD);
+    await test.step('Log in as standard_user', async () => {
+      await app.loginPage.goto();
+      await app.loginPage.login(USERS.STANDARD, PASSWORD);
+    });
   });
 
-  test('adding a product updates the cart badge and button label', { tag: ['@functional', '@regression'] }, async ({ app }) => {
-    const { inventoryPage } = app;
+  test('Verify adding a product updates the cart badge and button label', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+    await test.step('Add a product to the cart', async () => {
+      await app.inventoryPage.addToCart(PRODUCT_NAMES.BACKPACK);
+    });
 
-    await inventoryPage.addToCart(PRODUCT_NAMES.BACKPACK);
-
-    expect(await inventoryPage.header.getCartCount()).toBe(1);
-    await expect(inventoryPage.removeButton(PRODUCT_NAMES.BACKPACK)).toBeVisible();
+    await test.step('Verify the cart badge and button label update', async () => {
+      expect(await app.inventoryPage.header.getCartCount()).toBe(1);
+      await expect(app.inventoryPage.removeButton(PRODUCT_NAMES.BACKPACK)).toBeVisible();
+    });
   });
 
-  test('removing a product updates the cart badge and button label', { tag: ['@functional', '@regression'] }, async ({ app }) => {
-    const { inventoryPage } = app;
+  test('Verify removing a product updates the cart badge and button label', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+    await test.step('Add then remove a product from the cart', async () => {
+      await app.inventoryPage.addToCart(PRODUCT_NAMES.BACKPACK);
+      await app.inventoryPage.removeFromCart(PRODUCT_NAMES.BACKPACK);
+    });
 
-    await inventoryPage.addToCart(PRODUCT_NAMES.BACKPACK);
-    await inventoryPage.removeFromCart(PRODUCT_NAMES.BACKPACK);
-
-    expect(await inventoryPage.header.getCartCount()).toBe(0);
-    await expect(inventoryPage.addToCartButton(PRODUCT_NAMES.BACKPACK)).toBeVisible();
+    await test.step('Verify the cart badge and button label reset', async () => {
+      expect(await app.inventoryPage.header.getCartCount()).toBe(0);
+      await expect(app.inventoryPage.addToCartButton(PRODUCT_NAMES.BACKPACK)).toBeVisible();
+    });
   });
 
-  test('add-to-cart state stays in sync between inventory and product detail page', { tag: ['@functional', '@regression'] }, async ({ app }) => {
-    const { inventoryPage, productDetailPage } = app;
+  test(
+    'Verify add-to-cart state stays in sync between inventory and product detail page',
+    { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] },
+    async ({ app }) => {
+      await test.step('Add a product to the cart from the product detail page', async () => {
+        await app.inventoryPage.openProduct(PRODUCT_NAMES.BIKE_LIGHT);
+        await app.productDetailPage.addToCart();
+      });
 
-    await inventoryPage.openProduct(PRODUCT_NAMES.BIKE_LIGHT);
-    await productDetailPage.addToCart();
-    await expect(productDetailPage.removeButton).toBeVisible();
+      await test.step('Verify the product detail page reflects the cart state', async () => {
+        await expect(app.productDetailPage.removeButton).toBeVisible();
+      });
 
-    await productDetailPage.backToProducts();
-    await expect(inventoryPage.removeButton(PRODUCT_NAMES.BIKE_LIGHT)).toBeVisible();
+      await test.step('Verify the inventory page reflects the same cart state', async () => {
+        await app.productDetailPage.backToProducts();
+        await expect(app.inventoryPage.removeButton(PRODUCT_NAMES.BIKE_LIGHT)).toBeVisible();
+      });
+    }
+  );
+
+  test('Verify sorting by name Z to A orders products in reverse', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+    await test.step('Sort by name Z to A', async () => {
+      await app.inventoryPage.sortBy(SORT_OPTIONS.NAME_Z_TO_A);
+    });
+
+    await test.step('Verify products are ordered in reverse alphabetical order', async () => {
+      await expect
+        .poll(() => app.inventoryPage.getProductNamesInOrder())
+        .toEqual([
+          PRODUCT_NAMES.RED_T_SHIRT,
+          PRODUCT_NAMES.ONESIE,
+          PRODUCT_NAMES.FLEECE_JACKET,
+          PRODUCT_NAMES.BOLT_T_SHIRT,
+          PRODUCT_NAMES.BIKE_LIGHT,
+          PRODUCT_NAMES.BACKPACK
+        ]);
+    });
   });
 
-  test('sorting by name Z to A orders products in reverse', { tag: ['@functional', '@regression'] }, async ({ app }) => {
-    const { inventoryPage } = app;
+  test('Verify sorting by price low to high orders products ascending', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+    await test.step('Sort by price low to high', async () => {
+      await app.inventoryPage.sortBy(SORT_OPTIONS.PRICE_LOW_TO_HIGH);
+    });
 
-    await inventoryPage.sortBy('za');
-
-    await expect
-      .poll(() => inventoryPage.getProductNamesInOrder())
-      .toEqual([
-        PRODUCT_NAMES.RED_T_SHIRT,
-        PRODUCT_NAMES.ONESIE,
-        PRODUCT_NAMES.FLEECE_JACKET,
-        PRODUCT_NAMES.BOLT_T_SHIRT,
-        PRODUCT_NAMES.BIKE_LIGHT,
-        PRODUCT_NAMES.BACKPACK
-      ]);
+    await test.step('Verify products are ordered by ascending price', async () => {
+      await expect
+        .poll(() => app.inventoryPage.getProductNamesInOrder())
+        .toEqual([
+          PRODUCT_NAMES.ONESIE,
+          PRODUCT_NAMES.BIKE_LIGHT,
+          PRODUCT_NAMES.BOLT_T_SHIRT,
+          PRODUCT_NAMES.RED_T_SHIRT,
+          PRODUCT_NAMES.BACKPACK,
+          PRODUCT_NAMES.FLEECE_JACKET
+        ]);
+    });
   });
 
-  test('sorting by price low to high orders products ascending', { tag: ['@functional', '@regression'] }, async ({ app }) => {
-    const { inventoryPage } = app;
+  test('Verify sorting by price high to low orders products descending', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+    await test.step('Sort by price high to low', async () => {
+      await app.inventoryPage.sortBy(SORT_OPTIONS.PRICE_HIGH_TO_LOW);
+    });
 
-    await inventoryPage.sortBy('lohi');
-
-    await expect
-      .poll(() => inventoryPage.getProductNamesInOrder())
-      .toEqual([
-        PRODUCT_NAMES.ONESIE,
-        PRODUCT_NAMES.BIKE_LIGHT,
-        PRODUCT_NAMES.BOLT_T_SHIRT,
-        PRODUCT_NAMES.RED_T_SHIRT,
-        PRODUCT_NAMES.BACKPACK,
-        PRODUCT_NAMES.FLEECE_JACKET
-      ]);
+    await test.step('Verify products are ordered by descending price', async () => {
+      await expect
+        .poll(() => app.inventoryPage.getProductNamesInOrder())
+        .toEqual([
+          PRODUCT_NAMES.FLEECE_JACKET,
+          PRODUCT_NAMES.BACKPACK,
+          PRODUCT_NAMES.BOLT_T_SHIRT,
+          PRODUCT_NAMES.RED_T_SHIRT,
+          PRODUCT_NAMES.BIKE_LIGHT,
+          PRODUCT_NAMES.ONESIE
+        ]);
+    });
   });
 
-  test('sorting by price high to low orders products descending', { tag: ['@functional', '@regression'] }, async ({ app }) => {
-    const { inventoryPage } = app;
+  test('Verify cart persists across a page reload', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app, page }) => {
+    await test.step('Add a product to the cart', async () => {
+      await app.inventoryPage.addToCart(PRODUCT_NAMES.BACKPACK);
+      expect(await app.inventoryPage.header.getCartCount()).toBe(1);
+    });
 
-    await inventoryPage.sortBy('hilo');
+    await test.step('Reload the page', async () => {
+      await page.reload();
+    });
 
-    await expect
-      .poll(() => inventoryPage.getProductNamesInOrder())
-      .toEqual([
-        PRODUCT_NAMES.FLEECE_JACKET,
-        PRODUCT_NAMES.BACKPACK,
-        PRODUCT_NAMES.BOLT_T_SHIRT,
-        PRODUCT_NAMES.RED_T_SHIRT,
-        PRODUCT_NAMES.BIKE_LIGHT,
-        PRODUCT_NAMES.ONESIE
-      ]);
-  });
-
-  test('cart persists across a page reload', { tag: ['@functional', '@regression'] }, async ({ app, page }) => {
-    const { inventoryPage } = app;
-
-    await inventoryPage.addToCart(PRODUCT_NAMES.BACKPACK);
-    expect(await inventoryPage.header.getCartCount()).toBe(1);
-
-    await page.reload();
-
-    expect(await inventoryPage.header.getCartCount()).toBe(1);
-    await expect(inventoryPage.removeButton(PRODUCT_NAMES.BACKPACK)).toBeVisible();
+    await test.step('Verify the cart still contains the product', async () => {
+      expect(await app.inventoryPage.header.getCartCount()).toBe(1);
+      await expect(app.inventoryPage.removeButton(PRODUCT_NAMES.BACKPACK)).toBeVisible();
+    });
   });
 });

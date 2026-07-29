@@ -29,6 +29,11 @@ export const SORT_OPTIONS = {
 
 export const SESSION_COOKIE_NAME = 'session-username';
 
+export const INVALID_CREDENTIALS = {
+  username: 'invalid_user',
+  password: 'wrong_password'
+};
+
 export const VALID_CHECKOUT_INFO = {
   firstName: 'Dmitrii',
   lastName: 'Semm',

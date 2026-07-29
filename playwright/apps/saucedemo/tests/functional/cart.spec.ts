@@ -1,38 +1,47 @@
 import { test, expect } from '../../app.fixture';
 import { USERS, PASSWORD, PRODUCT_NAMES } from '../../constants';
+import { TAGS } from '../../../../common/constants';
 
 test.describe('Cart', () => {
   test.beforeEach(async ({ app }) => {
-    await app.loginPage.goto();
-    await app.loginPage.login(USERS.STANDARD, PASSWORD);
-    await app.inventoryPage.addToCart(PRODUCT_NAMES.BACKPACK);
+    await test.step('Log in as standard_user and add a product to the cart', async () => {
+      await app.loginPage.goto();
+      await app.loginPage.login(USERS.STANDARD, PASSWORD);
+      await app.inventoryPage.addToCart(PRODUCT_NAMES.BACKPACK);
+    });
   });
 
-  test('cart page shows the added product', { tag: ['@functional', '@smoke'] }, async ({ app }) => {
-    const { inventoryPage, cartPage } = app;
+  test('Verify the cart page shows the added product', { tag: [TAGS.FUNCTIONAL, TAGS.SMOKE] }, async ({ app }) => {
+    await test.step('Go to the cart page', async () => {
+      await app.inventoryPage.header.goToCart();
+    });
 
-    await inventoryPage.header.goToCart();
-
-    await expect(cartPage.cartItem(PRODUCT_NAMES.BACKPACK)).toBeVisible();
-    await expect(cartPage.itemQuantity(PRODUCT_NAMES.BACKPACK)).toHaveText('1');
+    await test.step('Verify the product is listed with the correct quantity', async () => {
+      await expect(app.cartPage.cartItem(PRODUCT_NAMES.BACKPACK)).toBeVisible();
+      await expect(app.cartPage.itemQuantity(PRODUCT_NAMES.BACKPACK)).toHaveText('1');
+    });
   });
 
-  test('removing a product from the cart page updates the badge', { tag: ['@functional', '@regression'] }, async ({ app }) => {
-    const { inventoryPage, cartPage } = app;
+  test('Verify removing a product from the cart page updates the badge', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+    await test.step('Go to the cart page and remove the product', async () => {
+      await app.inventoryPage.header.goToCart();
+      await app.cartPage.removeItem(PRODUCT_NAMES.BACKPACK);
+    });
 
-    await inventoryPage.header.goToCart();
-    await cartPage.removeItem(PRODUCT_NAMES.BACKPACK);
-
-    expect(await cartPage.header.getCartCount()).toBe(0);
-    await expect(cartPage.cartItem(PRODUCT_NAMES.BACKPACK)).toHaveCount(0);
+    await test.step('Verify the cart is empty', async () => {
+      expect(await app.cartPage.header.getCartCount()).toBe(0);
+      await expect(app.cartPage.cartItem(PRODUCT_NAMES.BACKPACK)).toHaveCount(0);
+    });
   });
 
-  test('continue shopping returns to the inventory page', { tag: ['@functional', '@regression'] }, async ({ app }) => {
-    const { inventoryPage, cartPage } = app;
+  test('Verify continue shopping returns to the inventory page', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+    await test.step('Go to the cart page and continue shopping', async () => {
+      await app.inventoryPage.header.goToCart();
+      await app.cartPage.continueShopping();
+    });
 
-    await inventoryPage.header.goToCart();
-    await cartPage.continueShopping();
-
-    await expect(inventoryPage.title).toHaveText('Products');
+    await test.step('Verify the inventory page is shown', async () => {
+      await expect(app.inventoryPage.title).toHaveText('Products');
+    });
   });
 });
