@@ -19,15 +19,15 @@ const saucedemoConfig: PlaywrightTestConfig = {
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] }
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 } }
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] }
+      use: { ...devices['Desktop Safari'], viewport: { width: 1920, height: 1080 } }
+    },
+    {
+      name: 'mobile-safari',
+      use: { ...devices['iPhone 15 Pro'] }
     }
   ]
 };
