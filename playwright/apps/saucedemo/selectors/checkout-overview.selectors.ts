@@ -1,7 +1,7 @@
 import type { Locator } from '@playwright/test';
-import { Base } from '../../../common/base';
+import { UiBase } from '../../../common/ui-base';
 
-export class CheckoutOverviewSelectors extends Base {
+export class CheckoutOverviewSelectors extends UiBase {
   readonly items: Locator = this.page.getByTestId('inventory-item');
   readonly paymentInfoValue: Locator = this.page.getByTestId('payment-info-value');
   readonly shippingInfoValue: Locator = this.page.getByTestId('shipping-info-value');

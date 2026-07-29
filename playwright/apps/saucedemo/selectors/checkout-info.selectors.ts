@@ -1,7 +1,7 @@
 import type { Locator } from '@playwright/test';
-import { Base } from '../../../common/base';
+import { UiBase } from '../../../common/ui-base';
 
-export class CheckoutInfoSelectors extends Base {
+export class CheckoutInfoSelectors extends UiBase {
   readonly firstNameInput: Locator = this.page.getByTestId('firstName');
   readonly lastNameInput: Locator = this.page.getByTestId('lastName');
   readonly postalCodeInput: Locator = this.page.getByTestId('postalCode');
