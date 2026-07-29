@@ -1,75 +1,28 @@
-import { defineConfig, devices } from '@playwright/test';
+import type { PlaywrightTestConfig } from '@playwright/test';
+import path from 'node:path';
+import { TIMEOUT } from './playwright/common/constants';
 
 /**
- * See https://playwright.dev/docs/test-configuration.
+ * Shared base config every app under playwright/apps/ spreads into its own
+ * playwright.config.ts (e.g. { ...baseConfig, testDir: ..., use: {...} }).
+ * outputDir/reporter point at the repo root so all apps' results land in
+ * one place, not nested inside each app's own folder.
  */
-export default defineConfig({
-  testDir: './playwright',
-  testMatch: '**/tests/**/*.spec.ts',
-  /* Run tests in files in parallel */
+const baseConfig: PlaywrightTestConfig = {
+  name: 'Base config',
+  timeout: TIMEOUT.THIRTY_SECONDS,
   fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  outputDir: path.resolve(__dirname, 'test-results'),
+  reporter: [['html', { outputFolder: path.resolve(__dirname, 'playwright-report'), open: 'never' }]],
   use: {
-    /* Base URL to use in actions like `await page.goto('')`. */
-    baseURL: 'https://www.saucedemo.com',
+    actionTimeout: TIMEOUT.FIFTEEN_SECONDS,
+    trace: 'on',
+    screenshot: 'on',
+    video: 'on'
+  }
+};
 
-    /* Matches this app's data-test attributes, so page.getByTestId() works out of the box. */
-    testIdAttribute: 'data-test',
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry'
-  },
-
-  /* Configure projects for major browsers */
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] }
-    },
-
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] }
-    },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] }
-    }
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
-  ]
-
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
-});
+export default baseConfig;
