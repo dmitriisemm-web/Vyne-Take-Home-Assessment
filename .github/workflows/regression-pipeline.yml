@@ -26,6 +26,10 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.62.0-jammy
+    env:
+      # The container runs as root, but $HOME defaults to /github/home
+      # (owned by a different uid), which breaks Firefox's launch sandbox.
+      HOME: /root
     steps:
       - name: Checkout
         uses: actions/checkout@v5
