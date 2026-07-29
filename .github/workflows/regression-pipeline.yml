@@ -34,6 +34,9 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version: 24
+          # v5 defaults this to true, which shells out to yarn before
+          # Corepack is enabled below and fails on this repo's Yarn 4.
+          package-manager-cache: false
 
       - name: Install dependencies
         run: corepack enable && yarn install --immutable
