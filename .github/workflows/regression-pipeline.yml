@@ -24,21 +24,26 @@ jobs:
   run-tests:
     name: Run ${{ inputs.app }} - ${{ inputs.suite }}
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.0-jammy
+    env:
+      # The container runs as root, but $HOME defaults to /github/home
+      # (owned by a different uid), which breaks Firefox's launch sandbox.
+      HOME: /root
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 24
+          # v5 defaults this to true, which shells out to yarn before
+          # Corepack is enabled below and fails on this repo's Yarn 4.
+          package-manager-cache: false
 
       - name: Install dependencies
         run: corepack enable && yarn install --immutable
-
-      - name: Install Playwright browsers
-        if: inputs.app == 'saucedemo'
-        run: yarn playwright install --with-deps chromium firefox webkit
 
       - name: Determine test script
         id: script
@@ -54,7 +59,7 @@ jobs:
 
       - name: Upload HTML report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: playwright-report-${{ inputs.app }}-${{ inputs.suite }}
           path: playwright-report/
