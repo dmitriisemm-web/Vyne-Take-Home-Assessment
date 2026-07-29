@@ -32,7 +32,7 @@ export class InventoryPage extends InventorySelectors {
   }
 
   async getProductNamesInOrder(): Promise<string[]> {
-    return this.items.getByTestId('inventory-item-name').allTextContents();
+    return this.productNames.allTextContents();
   }
 
   async isInCart(name: string): Promise<boolean> {

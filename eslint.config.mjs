@@ -2,6 +2,7 @@ import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import playwright from 'eslint-plugin-playwright';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import local from './eslint-rules/index.mjs';
 
 export default tseslint.config(
   {
@@ -11,7 +12,8 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   {
     plugins: {
-      playwright
+      playwright,
+      local
     },
     rules: {
       // TypeScript rules
@@ -39,13 +41,24 @@ export default tseslint.config(
       'playwright/no-wait-for-timeout': 'error',
       'playwright/prefer-web-first-assertions': 'error',
       'playwright/valid-expect': 'error',
-      'playwright/valid-title': 'error',
+      'playwright/valid-title': [
+        'error',
+        {
+          mustMatch: {
+            test: ['^(Verify|Check)', 'Test title must start with "Verify" or "Check"']
+          }
+        }
+      ],
       'playwright/no-useless-not': 'warn',
       'playwright/prefer-to-contain': 'warn',
       'playwright/prefer-to-have-length': 'warn',
       'playwright/prefer-to-have-count': 'warn',
       'playwright/prefer-comparison-matcher': 'warn',
       'playwright/prefer-equality-matcher': 'warn',
+
+      // Local rules
+      'local/no-selectors-outside-file': 'error',
+      'local/no-xpath-selectors': 'error',
 
       // Regular rules
       'no-unused-vars': 'off',
