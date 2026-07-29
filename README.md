@@ -139,7 +139,23 @@ Every SauceDemo screen is represented by two classes:
 
 Both selectors and page classes extend **`UiBase`** (`playwright/common/ui-base.ts`), which does one thing: assign `this.page` in its constructor. That's what makes the `readonly` field-initializer pattern above safe — per JavaScript class-field semantics, a subclass's field initializers only run _after_ `super()` returns, so `this.page` is guaranteed set by the time a locator field initializes. A selectors/page class must never define its own `constructor(page: Page)` — that would break this guarantee.
 
-Shared pieces that appear on every screen (like the nav header) live in `components/` instead of `selectors/` + `pages/`: one file, locators and methods together, since a component is small enough not to need the split.
+### Shared components
+
+Some UI — the nav header, the cart badge, the hamburger menu — appears on almost every screen, not just one. Duplicating its locators and click methods into every page class would violate the whole point of the model, so it gets factored out into `components/` instead: one file per component, holding both locators and methods together (unlike the selectors/page split), since a component is small and self-contained enough not to need it.
+
+A component is **composed into** each page as a field, not inherited:
+
+```ts
+export class InventoryPage extends InventorySelectors {
+  readonly header: HeaderComponent = new HeaderComponent(this.page);
+}
+```
+
+```ts
+await saucedemoApp.inventoryPage.header.logout();
+```
+
+This is why `components/` exists as its own concept rather than just being "smaller pages": a page represents one screen, but a component represents a piece of UI that's reused _across_ screens, so it can't live inside any single page's own selectors/page pair.
 
 All of it is tied together by **`app.fixture.ts`**, which exposes a single `saucedemoApp` fixture holding an instance of every page:
 
