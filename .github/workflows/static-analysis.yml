@@ -1,33 +1,27 @@
-name: Static Analysis
+name: 'Pull Request Check'
 
 on:
   pull_request:
-    branches: [master]
-  push:
-    branches: [master]
+    types: [opened, edited, reopened, synchronize]
 
 jobs:
-  static-analysis:
-    name: Lint & Typecheck
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Setup Node
+      - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: yarn
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: corepack enable && yarn install --immutable
 
-      - name: Run ESLint
+      - name: Run Eslint
         run: yarn lint
 
-      - name: Run TypeScript compiler
+      - name: Run TS Compiler
+        if: always()
         run: yarn typecheck
