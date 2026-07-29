@@ -2,7 +2,9 @@ import type { BrowserContext } from '@playwright/test';
 import { BASE_URL, SESSION_COOKIE_NAME } from './constants';
 
 export function parsePrice(text: string): number {
-  const match = text.match(/\d+\.\d+/);
+  // Most prices render as "$29.99", but an empty cart's subtotal renders
+  // as the integer "$0" with no decimal part, so the fraction is optional.
+  const match = text.match(/\d+(\.\d+)?/);
   return match ? parseFloat(match[0]) : NaN;
 }
 

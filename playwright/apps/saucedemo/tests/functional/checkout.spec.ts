@@ -95,3 +95,31 @@ test.describe('Checkout', () => {
     });
   });
 });
+
+test.describe('Checkout with an empty cart', () => {
+  test.beforeEach(async ({ app }) => {
+    await test.step('Log in and go to the cart page without adding any product', async () => {
+      await app.loginPage.goto();
+      await app.loginPage.login(USERS.STANDARD, PASSWORD);
+      await app.inventoryPage.header.goToCart();
+    });
+  });
+
+  test('Verify checking out with an empty cart reaches a $0 confirmation', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+    await test.step('Checkout with no items in the cart', async () => {
+      await app.cartPage.checkout();
+      await app.checkoutInfoPage.fill(VALID_CHECKOUT_INFO);
+      await app.checkoutInfoPage.continueToOverview();
+    });
+
+    await test.step('Verify the overview shows a $0 total', async () => {
+      expect(await app.checkoutOverviewPage.getSubtotal()).toBe(0);
+      expect(await app.checkoutOverviewPage.getTotal()).toBe(0);
+    });
+
+    await test.step('Verify the order can still be completed', async () => {
+      await app.checkoutOverviewPage.finish();
+      await expect(app.checkoutCompletePage.completeHeader).toHaveText('Thank you for your order!');
+    });
+  });
+});

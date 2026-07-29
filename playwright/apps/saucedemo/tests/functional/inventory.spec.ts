@@ -53,6 +53,26 @@ test.describe('Inventory', () => {
     }
   );
 
+  test('Verify sorting by name A to Z orders products alphabetically', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+    await test.step('Sort by name Z to A, then back to A to Z', async () => {
+      await app.inventoryPage.sortBy(SORT_OPTIONS.NAME_Z_TO_A);
+      await app.inventoryPage.sortBy(SORT_OPTIONS.NAME_A_TO_Z);
+    });
+
+    await test.step('Verify products are ordered alphabetically', async () => {
+      await expect
+        .poll(() => app.inventoryPage.getProductNamesInOrder())
+        .toEqual([
+          PRODUCT_NAMES.BACKPACK,
+          PRODUCT_NAMES.BIKE_LIGHT,
+          PRODUCT_NAMES.BOLT_T_SHIRT,
+          PRODUCT_NAMES.FLEECE_JACKET,
+          PRODUCT_NAMES.ONESIE,
+          PRODUCT_NAMES.RED_T_SHIRT
+        ]);
+    });
+  });
+
   test('Verify sorting by name Z to A orders products in reverse', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
     await test.step('Sort by name Z to A', async () => {
       await app.inventoryPage.sortBy(SORT_OPTIONS.NAME_Z_TO_A);
@@ -107,6 +127,29 @@ test.describe('Inventory', () => {
           PRODUCT_NAMES.BIKE_LIGHT,
           PRODUCT_NAMES.ONESIE
         ]);
+    });
+  });
+
+  test('Verify the cart badge stays accurate across multiple products', { tag: [TAGS.FUNCTIONAL, TAGS.REGRESSION] }, async ({ app }) => {
+    await test.step('Add two products to the cart', async () => {
+      await app.inventoryPage.addToCart(PRODUCT_NAMES.BACKPACK);
+      await app.inventoryPage.addToCart(PRODUCT_NAMES.BIKE_LIGHT);
+    });
+
+    await test.step('Verify the cart badge counts both products', async () => {
+      expect(await app.inventoryPage.header.getCartCount()).toBe(2);
+      await expect(app.inventoryPage.removeButton(PRODUCT_NAMES.BACKPACK)).toBeVisible();
+      await expect(app.inventoryPage.removeButton(PRODUCT_NAMES.BIKE_LIGHT)).toBeVisible();
+    });
+
+    await test.step('Remove one product from the cart', async () => {
+      await app.inventoryPage.removeFromCart(PRODUCT_NAMES.BACKPACK);
+    });
+
+    await test.step('Verify the cart badge reflects only the remaining product', async () => {
+      expect(await app.inventoryPage.header.getCartCount()).toBe(1);
+      await expect(app.inventoryPage.addToCartButton(PRODUCT_NAMES.BACKPACK)).toBeVisible();
+      await expect(app.inventoryPage.removeButton(PRODUCT_NAMES.BIKE_LIGHT)).toBeVisible();
     });
   });
 
